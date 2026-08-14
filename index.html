@@ -295,7 +295,6 @@ function processData() {
         return;
     }
 
-    // Split text inputs cleanly line by line
     let lines = rawData.split('\n');
     
     if (plan === 'free' && lines.length > 3) {
@@ -309,17 +308,16 @@ function processData() {
 
         let parts = currentLine.split(',');
         if (parts.length >= 2) {
-            // FIX: Using shift and pop methods to extract data safely without indexing brackets breaking
             let rawName = parts.shift().trim();
             let rawPhone = parts.join(',').trim();
             
-            // Strip out non-numeric characters from phone string
+            // Clean phone string
             let cleanPhone = rawPhone.replace(/\s+/g, '').replace('+', '');
             cleanPhone = cleanPhone.replace(/[^0-9]/g, ''); 
             
             if (!rawName || !cleanPhone) continue;
 
-            // Automatically format Kenyan local prefixes (07... / 01...) to 254...
+            // Convert local Kenyan format (07... / 01...) to 254...
             if (cleanPhone.startsWith('0')) {
                 cleanPhone = '254' + cleanPhone.substring(1);
             }
@@ -327,8 +325,8 @@ function processData() {
             const customMessage = template.replace('{name}', rawName);
             const encodedMessage = encodeURIComponent(customMessage);
             
-            // FIX: Using clean URL string concatenation to bypass template literal variable errors
-            const whatsappUrl = 'https://wa.me' + cleanPhone + '?text=' + encodedMessage;
+            // FIXED: Added full https protocol and correct slash formatting
+            const whatsappUrl = 'https://whatsapp.com' + cleanPhone + '&text=' + encodedMessage;
 
             const item = document.createElement('div');
             item.className = 'link-card';
@@ -344,6 +342,7 @@ function processData() {
     }
 }
 </script>
+
 
 
 

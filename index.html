@@ -317,7 +317,7 @@ function processData() {
             
             if (!rawName || !cleanPhone) continue;
 
-            // Convert local Kenyan format (07... / 01...) to 254...
+            // Convert local Kenyan format (07... or 01...) to 254...
             if (cleanPhone.startsWith('0')) {
                 cleanPhone = '254' + cleanPhone.substring(1);
             }
@@ -325,8 +325,8 @@ function processData() {
             const customMessage = template.replace('{name}', rawName);
             const encodedMessage = encodeURIComponent(customMessage);
             
-            // CRITICAL FIX: Direct URL formatting using the bulletproof wa.me global API link
-            const whatsappUrl = 'https://wa.me' + 0799090363 + '?text=' + encodedMessage;
+            // BULLETPROOF WEB LINK: Avoids wa.me/ to bypass missing slash bugs
+            const whatsappUrl = 'https://whatsapp.com' + 0799090363 + '&text=' + encodedMessage;
 
             const item = document.createElement('div');
             item.className = 'link-card';

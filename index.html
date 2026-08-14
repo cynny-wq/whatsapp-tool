@@ -3,83 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Linker & Pricing</title>
+    <title>WhatsApp Bulk Linker — Premium Tool</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 15px; background-color: #f0f2f5; margin: 0; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        h2 { color: #25D366; text-align: center; margin-top: 0; }
-        label { font-weight: bold; display: block; margin-top: 15px; font-size: 14px; }
-        textarea, input, select { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
-        button { width: 100%; padding: 12px; background-color: #25D366; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }
-        .link-list { margin-top: 20px; }
-        .link-item { background: #e7fed9; padding: 10px; margin-bottom: 5px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
-        a { background: #25D366; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px; font-size: 14px; }
-        
-        /* Pricing Cards Section */
-        .pricing-section { margin-top: 30px; border-top: 2px dashed #ccc; padding-top: 20px; }
-        .pricing-title { text-align: center; color: #333; font-size: 18px; margin-bottom: 15px; }
-        .card { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .card.active-plan { border: 2px solid #25D366; background: #f9fff9; }
-        .card h3 { margin: 0 0 5px 0; font-size: 16px; display: flex; justify-content: space-between; }
-        .price { color: #25D366; font-weight: bold; }
-        .card p { margin: 0; font-size: 13px; color: #666; }
-        
-        /* Pay Alert Box */
-        .upgrade-box { display: none; background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; border-radius: 5px; margin-top: 15px; font-size: 14px; }
+        :root {
+            --primary: #128C7E;
+            --primary-light: #25D366;
+            --bg: #f4f6f8;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-card { 
+            width: 100%;
+            max-width: 480px; 
+            background: var(--surface); 
+            padding: 24px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); 
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h2 { 
+            color: var(--primary); 
+            margin: 0 0 6px 0; 
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label { 
+            font-weight: 600; 
+            display: block; 
+            margin-bottom: 6px; 
+            font-size: 13px; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-main);
+        }
+
+        textarea, select { 
+            width: 100%; 
+            padding: 12px; 
+            box-sizing: border-box; 
+            border: 1px solid var(--border); 
+            border-radius: 10px; 
+            font-size: 14px; 
+            background-color: #fdfdfd;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+        }
+
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(18, 140, 126, 0.1);
+            background-color: #fff;
+        }
+
+        .btn-submit { 
+            width: 100%; 
+            padding: 14px; 
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 15px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        /* Warning & Paywall Box */
+        .upgrade-alert { 
+            display: none; 
+            background-color: #fff9e6; 
+            border-left: 4px solid #f39c12; 
+            color: #d35400; 
+            padding: 14px; 
+            border-radius: 8px; 
+            margin-top: 15px; 
+            font-size: 13px; 
+            line-height: 1.4;
+        }
+
+        /* Output Links Styling */
+        .results-section { 
+            margin-top: 24px; 
+        }
+
+        .link-card { 
+            background: #f7fff4; 
+            border: 1px solid #d4edda;
+            padding: 12px 16px; 
+            margin-bottom: 8px; 
+            border-radius: 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .link-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .link-info .name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .link-info .phone {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .btn-chat { 
+            background-color: var(--primary-light); 
+            color: white; 
+            padding: 6px 14px; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            font-size: 13px; 
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(37, 211, 102, 0.15);
+        }
+
+        /* Premium Tier Cards UI */
+        .pricing-header {
+            margin-top: 32px;
+            border-top: 1px solid var(--border);
+            padding-top: 24px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pricing-card { 
+            background: var(--surface); 
+            border: 1px solid var(--border); 
+            padding: 16px; 
+            border-radius: 12px; 
+            margin-top: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .pricing-card.featured { 
+            border: 2px solid var(--primary-light); 
+            background: #fafdfb; 
+            position: relative;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            background: var(--primary-light);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .pricing-card h4 { 
+            margin: 0 0 4px 0; 
+            font-size: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+
+        .pricing-card .amt { 
+            color: var(--primary); 
+            font-weight: 700; 
+        }
+
+        .pricing-card p { 
+            margin: 0; 
+            font-size: 12px; 
+            color: var(--text-muted); 
+            line-height: 1.4;
+        }
+
+        .payment-note {
+            margin-top: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #27ae60;
+            background: #ebf7ee;
+            padding: 6px;
+            border-radius: 4px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>WhatsApp Mobile Linker</h2>
+<div class="app-card">
+    <div class="header">
+        <h2>WhatsApp Linker</h2>
+        <p>Instant bulk messaging layout for small vendors</p>
+    </div>
     
-    <!-- Plan Selector -->
-    <label>Select Your Active Plan:</label>
-    <select id="currentPlan" onchange="togglePlanNotice()">
-        <option value="free">Free Tier Plan (Max 3 contacts)</option>
-        <option value="premium">Premium Plan (Unlimited) - KES 3,500</option>
-        <option value="business">Business Plan (Custom Setup) - KES 7,500</option>
-    </select>
-
-    <label>1. Type Message Template (Use {name}):</label>
-    <textarea id="message">Hello {name}, thank you for your order!</textarea>
-
-    <label>2. Paste Customers (Format: Name, Phone):</label>
-    <textarea id="customers" rows="4" placeholder="John, 254712345678&#10;Mary, 254787654321&#10;Alice, 254711112222"></textarea>
-
-    <button onclick="processData()">Generate WhatsApp Links</button>
-
-    <!-- Upgrade Notification Box -->
-    <div class="upgrade-box" id="upgradeBox">
-        <strong>⚠️ Limit Reached!</strong> You are on the Free Tier. To process more than 3 clients at a time, please upgrade your plan below.
+    <div class="form-group">
+        <label>Account Tier</label>
+        <select id="currentPlan" onchange="resetView()">
+            <option value="free">Free Tier (Max 3 contacts)</option>
+            <option value="premium">Premium Lifetime — KES 3,500</option>
+            <option value="business">Business Managed — KES 7,500</option>
+        </select>
     </div>
 
-    <div class="link-list" id="output"></div>
+    <div class="form-group">
+        <label>Message Template</label>
+        <textarea id="message" rows="3">Hello {name}, thank you for your order!</textarea>
+    </div>
 
-    <!-- Pricing Packages Section Displayed Inline -->
-    <div class="pricing-section">
-        <div class="pricing-title">🌟 Available Upgrade Plans</div>
-        
-        <div class="card">
-            <h3>Standard Free <span class="price">KES 0</span></h3>
-            <p>Perfect for testing. Generates up to 3 links per batch.</p>
-        </div>
-        
-        <div class="card active-plan">
-            <h3>Premium Lifetime 🔥 <span class="price">KES 3,500</span></h3>
-            <p>Unlock unlimited bulk link uploads. No monthly fees. Ideal for active Instagram & TikTok sellers.</p>
-            <p style="margin-top: 5px; font-size: 11px; font-weight: bold; color: #333;">To Unlock: Lipa na M-Pesa Buy Goods Till: XXXXXX</p>
-        </div>
-        
-        <div class="card">
-            <h3>Business Done-For-You <span class="price">KES 7,500</span></h3>
-            <p>Includes dedicated setup assistance, custom message templates pre-loaded, and Excel formatting support.</p>
-        </div>
+    <div class="form-group">
+        <label>Customer Entries (Format: Name, Phone)</label>
+        <textarea id="customers" rows="4" placeholder="Jane, 254712345678&#10;Otieno, 254787654321&#10;Kamau, 254711112222"></textarea>
+    </div>
+
+    <button class="btn-submit" onclick="processData()">Generate Magic Links</button>
+
+    <div class="upgrade-alert" id="upgradeBox">
+        <strong>⚠️ Limit Exceeded!</strong> You are on the Free Tier layout. To sort and generate more than 3 clients instantly, kindly unlock the Premium plan listed below.
+    </div>
+
+    <div class="results-section" id="output"></div>
+
+    <!-- Upgrade Offer Modules -->
+    <div class="pricing-header">Available Upgrades</div>
+    
+    <div class="pricing-card">
+        <h4>Standard Trial <span class="amt">KES 0</span></h4>
+        <p>Perfect for testing performance. Limited to 3 custom text links per upload run.</p>
+    </div>
+    
+    <div class="pricing-card featured">
+        <div class="featured-badge">Most Popular</div>
+        <h4>Premium Lifetime 🔥 <span class="amt">KES 3,500</span></h4>
+        <p>Process unlimited contacts smoothly. Zero subscription taxes. Best for daily Instagram, TikTok, and Facebook shop distributions.</p>
+        <div class="payment-note">To Activate: Send via M-Pesa to 07XX XXX XXX</div>
     </div>
 </div>
 
 <script>
-function togglePlanNotice() {
+function resetView() {
     document.getElementById('upgradeBox').style.display = 'none';
     document.getElementById('output').innerHTML = '';
 }
@@ -95,16 +308,15 @@ function processData() {
     upgradeBox.style.display = 'none';
 
     if (!rawData) {
-        alert('Please paste customer data first.');
+        alert('Please fill out customer details.');
         return;
     }
 
     let lines = rawData.split('\n').filter(line => line.trim() !== '');
     
-    // ENFORCE FREE TIER LIMIT
     if (plan === 'free' && lines.length > 3) {
         upgradeBox.style.display = 'block';
-        lines = lines.slice(0, 3); // Cut the list to only the first 3 items
+        lines = lines.slice(0, 3);
     }
     
     lines.forEach(line => {
@@ -118,13 +330,5 @@ function processData() {
             const whatsappUrl = `https://wa.me{phone}?text=${encodedMessage}`;
 
             const item = document.createElement('div');
-            item.className = 'link-item';
-            item.innerHTML = `<span><strong>${name}</strong> (${phone})</span> <a href="${whatsappUrl}" target="_blank">Chat</a>`;
-            outputDiv.appendChild(item);
-        }
-    });
-}
-</script>
-
-</body>
-</html>
+            item.className = 'link-card';
+item.innerHTML = <div class="link-info"> <span class="name">${name}</span> <span class="phone">${phone}</span> </div> <a href="${whatsappUrl}" target="_blank" class="btn-chat">Chat</a>;outputDiv.appendChild(item);}});}

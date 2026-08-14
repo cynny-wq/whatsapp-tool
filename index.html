@@ -296,45 +296,54 @@ function processData() {
         return;
     }
 
-    let lines = rawData.split('\n').filter(line => line.trim() !== '');
+    // Split inputs safely line by line
+    let lines = rawData.split('\n');
     
     if (plan === 'free' && lines.length > 3) {
         upgradeBox.style.display = 'block';
         lines = lines.slice(0, 3);
     }
     
-    lines.forEach(line => {
-        const parts = line.split(',');
+    for (let i = 0; i < lines.length; i++) {
+        let currentLine = lines[i].trim();
+        if (currentLine === '') continue;
+
+        let parts = currentLine.split(',');
         if (parts.length >= 2) {
-            const name = parts[0].trim();
+            // Force values explicitly into text format to prevent reference errors
+            let rawName = String(parts[0]).trim();
+            let rawPhone = String(parts[1]).trim();
             
-            // SMART FIX: Strips away spaces, plus signs, brackets, parentheses, and text
-            let phone = parts[1].trim().replace(/\s+/g, '').replace('+', '');
-            phone = phone.replace(/[^0-9]/g, ''); // Removes any non-numeric characters like ( ) [ ]
+            // Clean up the phone section by stripping letters and spaces
+            let cleanPhone = rawPhone.replace(/\s+/g, '').replace('+', '');
+            cleanPhone = cleanPhone.replace(/[^0-9]/g, ''); 
             
-            // Kenyan Number Standardizer (Converts 07... or 01... to 2547... or 2541...)
-            if (phone.startsWith('0')) {
-                phone = '254' + phone.substring(1);
+            if (!rawName || !cleanPhone) continue;
+
+            // Automatically format Kenyan local phone prefixes to international standards
+            if (cleanPhone.startsWith('0')) {
+                cleanPhone = '254' + cleanPhone.substring(1);
             }
 
-            const customMessage = template.replace('{name}', name);
+            const customMessage = template.replace('{name}', rawName);
             const encodedMessage = encodeURIComponent(customMessage);
-            const whatsappUrl = `https://wa.me{phone}?text=${encodedMessage}`;
+            const whatsappUrl = `https://wa.me{cleanPhone}?text=${encodedMessage}`;
 
             const item = document.createElement('div');
             item.className = 'link-card';
             item.innerHTML = `
                 <div class="link-info">
-                    <span class="name">${name}</span>
-                    <span class="phone">${o799090363}</span>
+                    <span class="name">${rawName}</span>
+                    <span class="phone">${0799090363}</span>
                 </div>
                 <a href="${whatsappUrl}" target="_blank" class="btn-chat">Chat</a>
             `;
             outputDiv.appendChild(item);
         }
-    });
+    }
 }
 </script>
+
 
 
 </body>

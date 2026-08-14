@@ -104,7 +104,6 @@
             transform: scale(0.98);
         }
 
-        /* Warning & Paywall Box */
         .upgrade-alert { 
             display: none; 
             background-color: #fff9e6; 
@@ -117,7 +116,6 @@
             line-height: 1.4;
         }
 
-        /* Output Links Styling */
         .results-section { 
             margin-top: 24px; 
         }
@@ -131,12 +129,6 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .link-info {
@@ -164,10 +156,8 @@
             border-radius: 6px; 
             font-size: 13px; 
             font-weight: 600;
-            box-shadow: 0 2px 6px rgba(37, 211, 102, 0.15);
         }
 
-        /* Premium Tier Cards UI */
         .pricing-header {
             margin-top: 32px;
             border-top: 1px solid var(--border);
@@ -177,7 +167,6 @@
             font-size: 15px;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .pricing-card { 
@@ -186,7 +175,6 @@
             padding: 16px; 
             border-radius: 12px; 
             margin-top: 12px;
-            transition: all 0.2s ease;
         }
 
         .pricing-card.featured { 
@@ -205,7 +193,6 @@
             font-weight: 700;
             padding: 2px 8px;
             border-radius: 10px;
-            text-transform: uppercase;
         }
 
         .pricing-card h4 { 
@@ -213,7 +200,6 @@
             font-size: 15px; 
             display: flex; 
             justify-content: space-between; 
-            align-items: center;
         }
 
         .pricing-card .amt { 
@@ -225,7 +211,6 @@
             margin: 0; 
             font-size: 12px; 
             color: var(--text-muted); 
-            line-height: 1.4;
         }
 
         .payment-note {
@@ -270,12 +255,11 @@
     <button class="btn-submit" onclick="processData()">Generate Magic Links</button>
 
     <div class="upgrade-alert" id="upgradeBox">
-        <strong>⚠️ Limit Exceeded!</strong> You are on the Free Tier layout. To sort and generate more than 3 clients instantly, kindly unlock the Premium plan listed below.
+        <strong>⚠️ Limit Exceeded!</strong> You are on the Free Tier layout. To generate more than 3 clients instantly, kindly unlock the Premium plan listed below.
     </div>
 
     <div class="results-section" id="output"></div>
 
-    <!-- Upgrade Offer Modules -->
     <div class="pricing-header">Available Upgrades</div>
     
     <div class="pricing-card">
@@ -322,11 +306,28 @@ function processData() {
     lines.forEach(line => {
         const parts = line.split(',');
         if (parts.length >= 2) {
-            // FIXED: Using index selectors on array parts
+            // FIXED INDICES: Checked and correctly mapped array index strings
             const name = parts[0].trim();
             const phone = parts[1].trim().replace(/\s+/g, '').replace('+', '');
             
             const customMessage = template.replace('{name}', name);
             const encodedMessage = encodeURIComponent(customMessage);
             const whatsappUrl = `https://wa.me{phone}?text=${encodedMessage}`;
-const item = document.createElement('div');item.className = 'link-card';item.innerHTML = <div class="link-info"> <span class="name">${name}</span> <span class="phone">${phone}</span> </div> <a href="${whatsappUrl}" target="_blank" class="btn-chat">Chat</a>;outputDiv.appendChild(item);}});}
+
+            const item = document.createElement('div');
+            item.className = 'link-card';
+            item.innerHTML = `
+                <div class="link-info">
+                    <span class="name">${name}</span>
+                    <span class="phone">${phone}</span>
+                </div>
+                <a href="${whatsappUrl}" target="_blank" class="btn-chat">Chat</a>
+            `;
+            outputDiv.appendChild(item);
+        }
+    });
+}
+</script>
+
+</body>
+</html>

@@ -306,13 +306,20 @@ function processData() {
     lines.forEach(line => {
         const parts = line.split(',');
         if (parts.length >= 2) {
-            // FIXED INDICES: Checked and correctly mapped array index strings
             const name = parts[0].trim();
-            const phone = parts[1].trim().replace(/\s+/g, '').replace('+', '');
             
+            // SMART FIX: Strips away spaces, plus signs, brackets, parentheses, and text
+            let phone = parts[1].trim().replace(/\s+/g, '').replace('+', '');
+            phone = phone.replace(/[^0-9]/g, ''); // Removes any non-numeric characters like ( ) [ ]
+            
+            // Kenyan Number Standardizer (Converts 07... or 01... to 2547... or 2541...)
+            if (phone.startsWith('0')) {
+                phone = '254' + phone.substring(1);
+            }
+
             const customMessage = template.replace('{name}', name);
             const encodedMessage = encodeURIComponent(customMessage);
-            const whatsappUrl = `https://wa.me{0799090363}?text=${encodedMessage}`;
+            const whatsappUrl = `https://wa.me{phone}?text=${encodedMessage}`;
 
             const item = document.createElement('div');
             item.className = 'link-card';
@@ -328,6 +335,7 @@ function processData() {
     });
 }
 </script>
+
 
 </body>
 </html>

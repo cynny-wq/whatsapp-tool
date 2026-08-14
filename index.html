@@ -274,7 +274,6 @@
         <div class="payment-note">To Activate: Send via M-Pesa to 0799090363</div>
     </div>
 </div>
-
 <script>
 function resetView() {
     document.getElementById('upgradeBox').style.display = 'none';
@@ -296,7 +295,7 @@ function processData() {
         return;
     }
 
-    // Split inputs safely line by line
+    // Split text inputs cleanly line by line
     let lines = rawData.split('\n');
     
     if (plan === 'free' && lines.length > 3) {
@@ -310,31 +309,33 @@ function processData() {
 
         let parts = currentLine.split(',');
         if (parts.length >= 2) {
-            // Force values explicitly into text format to prevent reference errors
-            let rawName = String(parts[0]).trim();
-            let rawPhone = String(parts[1]).trim();
+            // FIX: Using shift and pop methods to extract data safely without indexing brackets breaking
+            let rawName = parts.shift().trim();
+            let rawPhone = parts.join(',').trim();
             
-            // Clean up the phone section by stripping letters and spaces
+            // Strip out non-numeric characters from phone string
             let cleanPhone = rawPhone.replace(/\s+/g, '').replace('+', '');
             cleanPhone = cleanPhone.replace(/[^0-9]/g, ''); 
             
             if (!rawName || !cleanPhone) continue;
 
-            // Automatically format Kenyan local phone prefixes to international standards
+            // Automatically format Kenyan local prefixes (07... / 01...) to 254...
             if (cleanPhone.startsWith('0')) {
                 cleanPhone = '254' + cleanPhone.substring(1);
             }
 
             const customMessage = template.replace('{name}', rawName);
             const encodedMessage = encodeURIComponent(customMessage);
-            const whatsappUrl = `https://wa.me{0799090363}?text=${encodedMessage}`;
+            
+            // FIX: Using clean URL string concatenation to bypass template literal variable errors
+            const whatsappUrl = 'https://wa.me' + cleanPhone + '?text=' + encodedMessage;
 
             const item = document.createElement('div');
             item.className = 'link-card';
             item.innerHTML = `
                 <div class="link-info">
                     <span class="name">${rawName}</span>
-                    <span class="phone">${phone}</span>
+                    <span class="phone">${cleanPhone}</span>
                 </div>
                 <a href="${whatsappUrl}" target="_blank" class="btn-chat">Chat</a>
             `;
@@ -343,6 +344,7 @@ function processData() {
     }
 }
 </script>
+
 
 
 

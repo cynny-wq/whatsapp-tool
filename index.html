@@ -322,10 +322,11 @@ function processData() {
     lines.forEach(line => {
         const parts = line.split(',');
         if (parts.length >= 2) {
-            // FIXED: Correctly tracking indices within the split string array
+            // FIXED: Using index selectors on array parts
             const name = parts[0].trim();
             const phone = parts[1].trim().replace(/\s+/g, '').replace('+', '');
             
             const customMessage = template.replace('{name}', name);
             const encodedMessage = encodeURIComponent(customMessage);
-const whatsappUrl = `https://wa.me{phone}?text=${encodedMessage};const item = document.createElement('div');item.className = 'link-card';item.innerHTML = <div class="link-info"> <span class="name">${name}</span> <span class="phone">${phone}</span> </div> <a href="${whatsappUrl}" target="_blank" class="btn-chat">Chat</a>;outputDiv.appendChild(item);}});}
+            const whatsappUrl = `https://wa.me{phone}?text=${encodedMessage}`;
+const item = document.createElement('div');item.className = 'link-card';item.innerHTML = <div class="link-info"> <span class="name">${name}</span> <span class="phone">${phone}</span> </div> <a href="${whatsappUrl}" target="_blank" class="btn-chat">Chat</a>;outputDiv.appendChild(item);}});}

@@ -311,7 +311,7 @@ function processData() {
             let rawName = parts.shift().trim();
             let rawPhone = parts.join(',').trim();
             
-            // Clean phone string
+            // Clean phone string completely of non-numeric characters
             let cleanPhone = rawPhone.replace(/\s+/g, '').replace('+', '');
             cleanPhone = cleanPhone.replace(/[^0-9]/g, ''); 
             
@@ -325,8 +325,8 @@ function processData() {
             const customMessage = template.replace('{name}', rawName);
             const encodedMessage = encodeURIComponent(customMessage);
             
-            // FIXED: Added full https protocol and correct slash formatting
-            const whatsappUrl = 'https://whatsapp.com' + cleanPhone + '&text=' + encodedMessage;
+            // CRITICAL FIX: Direct URL formatting using the bulletproof wa.me global API link
+            const whatsappUrl = 'https://wa.me' + 0799090363 + '?text=' + encodedMessage;
 
             const item = document.createElement('div');
             item.className = 'link-card';

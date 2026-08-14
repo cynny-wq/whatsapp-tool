@@ -327,14 +327,14 @@ function processData() {
 
             const customMessage = template.replace('{name}', rawName);
             const encodedMessage = encodeURIComponent(customMessage);
-            const whatsappUrl = `https://wa.me{cleanPhone}?text=${encodedMessage}`;
+            const whatsappUrl = `https://wa.me{0799090363}?text=${encodedMessage}`;
 
             const item = document.createElement('div');
             item.className = 'link-card';
             item.innerHTML = `
                 <div class="link-info">
                     <span class="name">${rawName}</span>
-                    <span class="phone">${0799090363}</span>
+                    <span class="phone">${phone}</span>
                 </div>
                 <a href="${whatsappUrl}" target="_blank" class="btn-chat">Chat</a>
             `;

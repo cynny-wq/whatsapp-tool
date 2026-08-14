@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Linker & Pricing</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 15px; background-color: #f0f2f5; margin: 0; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { color: #25D366; text-align: center; margin-top: 0; }
+        label { font-weight: bold; display: block; margin-top: 15px; font-size: 14px; }
+        textarea, input, select { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+        button { width: 100%; padding: 12px; background-color: #25D366; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        .link-list { margin-top: 20px; }
+        .link-item { background: #e7fed9; padding: 10px; margin-bottom: 5px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+        a { background: #25D366; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px; font-size: 14px; }
+        
+        /* Pricing Cards Section */
+        .pricing-section { margin-top: 30px; border-top: 2px dashed #ccc; padding-top: 20px; }
+        .pricing-title { text-align: center; color: #333; font-size: 18px; margin-bottom: 15px; }
+        .card { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card.active-plan { border: 2px solid #25D366; background: #f9fff9; }
+        .card h3 { margin: 0 0 5px 0; font-size: 16px; display: flex; justify-content: space-between; }
+        .price { color: #25D366; font-weight: bold; }
+        .card p { margin: 0; font-size: 13px; color: #666; }
+        
+        /* Pay Alert Box */
+        .upgrade-box { display: none; background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; border-radius: 5px; margin-top: 15px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>WhatsApp Mobile Linker</h2>
+    
+    <!-- Plan Selector -->
+    <label>Select Your Active Plan:</label>
+    <select id="currentPlan" onchange="togglePlanNotice()">
+        <option value="free">Free Tier Plan (Max 3 contacts)</option>
+        <option value="premium">Premium Plan (Unlimited) - KES 3,500</option>
+        <option value="business">Business Plan (Custom Setup) - KES 7,500</option>
+    </select>
+
+    <label>1. Type Message Template (Use {name}):</label>
+    <textarea id="message">Hello {name}, thank you for your order!</textarea>
+
+    <label>2. Paste Customers (Format: Name, Phone):</label>
+    <textarea id="customers" rows="4" placeholder="John, 254712345678&#10;Mary, 254787654321&#10;Alice, 254711112222"></textarea>
+
+    <button onclick="processData()">Generate WhatsApp Links</button>
+
+    <!-- Upgrade Notification Box -->
+    <div class="upgrade-box" id="upgradeBox">
+        <strong>⚠️ Limit Reached!</strong> You are on the Free Tier. To process more than 3 clients at a time, please upgrade your plan below.
+    </div>
+
+    <div class="link-list" id="output"></div>
+
+    <!-- Pricing Packages Section Displayed Inline -->
+    <div class="pricing-section">
+        <div class="pricing-title">🌟 Available Upgrade Plans</div>
+        
+        <div class="card">
+            <h3>Standard Free <span class="price">KES 0</span></h3>
+            <p>Perfect for testing. Generates up to 3 links per batch.</p>
+        </div>
+        
+        <div class="card active-plan">
+            <h3>Premium Lifetime 🔥 <span class="price">KES 3,500</span></h3>
+            <p>Unlock unlimited bulk link uploads. No monthly fees. Ideal for active Instagram & TikTok sellers.</p>
+            <p style="margin-top: 5px; font-size: 11px; font-weight: bold; color: #333;">To Unlock: Lipa na M-Pesa Buy Goods Till: XXXXXX</p>
+        </div>
+        
+        <div class="card">
+            <h3>Business Done-For-You <span class="price">KES 7,500</span></h3>
+            <p>Includes dedicated setup assistance, custom message templates pre-loaded, and Excel formatting support.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePlanNotice() {
+    document.getElementById('upgradeBox').style.display = 'none';
+    document.getElementById('output').innerHTML = '';
+}
+
+function processData() {
+    const template = document.getElementById('message').value;
+    const rawData = document.getElementById('customers').value.trim();
+    const plan = document.getElementById('currentPlan').value;
+    const outputDiv = document.getElementById('output');
+    const upgradeBox = document.getElementById('upgradeBox');
+    
+    outputDiv.innerHTML = ''; 
+    upgradeBox.style.display = 'none';
+
+    if (!rawData) {
+        alert('Please paste customer data first.');
+        return;
+    }
+
+    let lines = rawData.split('\n').filter(line => line.trim() !== '');
+    
+    // ENFORCE FREE TIER LIMIT
+    if (plan === 'free' && lines.length > 3) {
+        upgradeBox.style.display = 'block';
+        lines = lines.slice(0, 3); // Cut the list to only the first 3 items
+    }
+    
+    lines.forEach(line => {
+        const parts = line.split(',');
+        if (parts.length >= 2) {
+            const name = parts[0].trim();
+            const phone = parts[1].trim().replace(/\s+/g, '').replace('+', '');
+            
+            const customMessage = template.replace('{name}', name);
+            const encodedMessage = encodeURIComponent(customMessage);
+            const whatsappUrl = `https://wa.me{phone}?text=${encodedMessage}`;
+
+            const item = document.createElement('div');
+            item.className = 'link-item';
+            item.innerHTML = `<span><strong>${name}</strong> (${phone})</span> <a href="${whatsappUrl}" target="_blank">Chat</a>`;
+            outputDiv.appendChild(item);
+        }
+    });
+}
+</script>
+
+</body>
+</html>
